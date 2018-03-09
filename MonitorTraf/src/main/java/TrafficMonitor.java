@@ -47,7 +47,7 @@ public class TrafficMonitor {
     	
     	SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("MonitorTraf").set("spark.driver.allowMultipleContexts","true");
     	SparkContext sc = new SparkContext(conf);
-    	JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(1));
+    	JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(5));
     	HiveContext hiveContext = new HiveContext(sc);
     	Dataset<Row> tableLimit = hiveContext.table("traffic_limits.limits_per_hour");
         final Integer min = tableLimit.filter(tableLimit.col("limit_name").equalTo("min")).select(tableLimit.col("limit_value")).first().getInt(0);
@@ -56,7 +56,7 @@ public class TrafficMonitor {
         //System.out.println(min+"CHECKCHECK"+max);
         
         Map<String, Object> kafkaParams = new HashMap<>();
-        kafkaParams.put("bootstrap.servers", "localhost:9092,anotherhost:9092");
+        kafkaParams.put("bootstrap.servers", "localhost:9092");
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
         kafkaParams.put("group.id", "use_a_separate_group_id_for_each_stream");
