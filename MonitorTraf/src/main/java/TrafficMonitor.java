@@ -37,7 +37,7 @@ public class TrafficMonitor {
 		
         SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("MonitorTraf");
         SparkSession sc = new SparkSession.Builder().config(conf).enableHiveSupport().getOrCreate();
-        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(1));
+        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(5));
         SQLContext sqlContext = new SQLContext(sc);
         Dataset<Row> tableLimit = sqlContext.table("traffic_limits.limits_per_hour");
         final Integer min = tableLimit.filter(tableLimit.col("limit_name").equalTo("min")).select(tableLimit.col("limit_value")).first().getInt(0);
