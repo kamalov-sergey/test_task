@@ -24,7 +24,7 @@ public class TrafficMonitor {
     
     public static void main(String[] args) throws InterruptedException  {
         SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("MonitorTraf");
-        SparkSession sc = new SparkSession.Builder().master("local[1]").appName("MonitorTraf").getOrCreate();
+        SparkSession sc = new SparkSession.Builder().config(conf).enableHiveSupport().getOrCreate();
         JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(1));
         SQLContext sqlContext = new SQLContext(sc);
         Dataset<Row> tableLimit = sqlContext.table("traffic_limits.limits_per_hour");
