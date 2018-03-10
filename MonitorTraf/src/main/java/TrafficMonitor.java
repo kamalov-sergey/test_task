@@ -20,20 +20,12 @@ import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
 public class TrafficMonitor { 
+
     public static boolean flagPrevAlert=false;
     
     public static void main(String[] args) throws InterruptedException  {
-        SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("MonitorTraf");
-        SparkSession sc = new SparkSession.Builder().config(conf).enableHiveSupport().getOrCreate();
-        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(1));
-        SQLContext sqlContext = new SQLContext(sc);
-        Dataset<Row> tableLimit = sqlContext.table("traffic_limits.limits_per_hour");
-        final Integer min = tableLimit.filter(tableLimit.col("limit_name").equalTo("min")).select(tableLimit.col("limit_value")).first().getInt(0);
-        final Integer max = tableLimit.filter(tableLimit.col("limit_name").equalTo("max")).select(tableLimit.col("limit_value")).first().getInt(0);
-        //sudo spark2-submit --class TrafficMonitor --master yarn --deploy-mode client --conf spark.driver.allowMultipleContexts=true MonitorTraf-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
-        //System.out.println(min+"CHECKCHECK"+max);
-        
-        Map<String, Object> kafkaParams = new HashMap<>();
+		//sudo spark2-submit --class TrafficMonitor --master yarn --deploy-mode client --conf spark.driver.allowMultipleContexts=true MonitorTraf-0.0.1-SNAPSHOT-jar-with-dependencies.jar 
+		Map<String, Object> kafkaParams = new HashMap<>();
         kafkaParams.put("bootstrap.servers", "localhost:9092");
         kafkaParams.put("key.deserializer", StringDeserializer.class);
         kafkaParams.put("value.deserializer", StringDeserializer.class);
@@ -42,7 +34,17 @@ public class TrafficMonitor {
         kafkaParams.put("enable.auto.commit", false);
 
         Collection<String> topics = Arrays.asList("traffic");
-
+		
+        SparkConf conf = new SparkConf().setMaster("local[1]").setAppName("MonitorTraf");
+        SparkSession sc = new SparkSession.Builder().config(conf).enableHiveSupport().getOrCreate();
+        JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.minutes(1));
+        SQLContext sqlContext = new SQLContext(sc);
+        Dataset<Row> tableLimit = sqlContext.table("traffic_limits.limits_per_hour");
+        final Integer min = tableLimit.filter(tableLimit.col("limit_name").equalTo("min")).select(tableLimit.col("limit_value")).first().getInt(0);
+        final Integer max = tableLimit.filter(tableLimit.col("limit_name").equalTo("max")).select(tableLimit.col("limit_value")).first().getInt(0);
+        
+        //System.out.println(min+"CHECKCHECK"+max);
+        
         JavaInputDStream<ConsumerRecord<Integer, Integer>> messages = KafkaUtils.createDirectStream(
                 jssc,
                 LocationStrategies.PreferConsistent(),
