@@ -7,7 +7,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 
 public class SendToKafka {
-	public static void sendToKafka(String topic, String input)  {
+	public static void SendMessage(String topic, String input)  {
 		//sudo /usr/bin/kafka_2.11-1.0.0/bin/kafka-server-start.sh /usr/bin/kafka_2.11-1.0.0/config/server.properties
         
         ///usr/bin/kafka_2.11-1.0.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic traffic

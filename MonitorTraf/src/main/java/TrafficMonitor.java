@@ -57,7 +57,7 @@ public class TrafficMonitor {
         if(sumBytes > max || sumBytes < min){SendToKafka.sendToKafka("alert","AAALAAAARM traffic is:"+sumBytes);flagPrevAlert = true;}
                 else if(flagPrevAlert = true)
                 {
-                    SendToKafka.sendToKafka("alert","Don't worry!");
+                    SendToKafka.SendMessage("alert","Don't worry!");
                     flagPrevAlert = false;
                 };
           

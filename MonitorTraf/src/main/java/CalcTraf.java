@@ -43,7 +43,7 @@ public class CalcTraf {
 	    		System.out.println(z);
 	    		System.out.println("total");
 	    		System.out.println(q);
-	    		SendToKafka.sendToKafka("traffic", z.toString());
+	    		SendToKafka.SendMessage("traffic", z.toString());
 	    		
      	}
      	};
